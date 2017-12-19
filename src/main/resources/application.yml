@@ -1,0 +1,18 @@
+#Spring profile configuration
+spring:
+  profiles:
+    active: dev
+  messages:
+    basename: i18n/messages
+  #upload
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 50mb
+      max-request-size: 50mb
+
+#Actuator configuration
+management:
+  context-path: /actuator
+  security:
+    enabled: false
