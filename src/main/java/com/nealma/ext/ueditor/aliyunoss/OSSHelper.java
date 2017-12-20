@@ -14,6 +14,7 @@ import java.util.UUID;
 public class OSSHelper {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     private OSSConfig ossConfig;
 
@@ -21,7 +22,7 @@ public class OSSHelper {
         if(inputStream == null){
             return null;
         }
-        String filename = ossConfig.getOssFilePath() + genFilename(fileExt);
+        String filename = ossConfig.getFilePath() + genFilename(fileExt);
         OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyId(), ossConfig.getAccessKeySecret());
         try{
             ossClient.putObject(ossConfig.getBucketName(), filename, inputStream);

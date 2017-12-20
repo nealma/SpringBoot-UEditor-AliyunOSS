@@ -41,7 +41,6 @@ public class BinaryUploader{
                 if (file == null) {
                     continue;
                 }
-
                 fileName = file.getOriginalFilename();
                 if (fileName.lastIndexOf(".") != -1) {
                     fileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
@@ -49,8 +48,7 @@ public class BinaryUploader{
                 if (!validType(fileExt, (String[]) conf.get("allowFiles"))) {
                     return new BaseState(false, AppInfo.NOT_ALLOW_FILE_TYPE);
                 }
-
-                if(validSize(file.getSize(), ((Long) conf.get("maxSize")).longValue())){
+                if(!validSize(file.getSize(), ((Long) conf.get("maxSize")).longValue())){
                     return new BaseState(false, AppInfo.MAX_SIZE);
                 }
                 url = OSSHelper.getInstance().uploadFile(file.getInputStream(), fileExt);
