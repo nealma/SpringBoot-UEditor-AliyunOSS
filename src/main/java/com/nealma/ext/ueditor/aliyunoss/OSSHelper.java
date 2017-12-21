@@ -5,18 +5,22 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
-
+@Component
 public class OSSHelper {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Resource
     private OSSConfig ossConfig;
+
+    public OSSHelper(OSSConfig ossConfig) {
+        this.ossConfig = ossConfig;
+    }
 
     public String uploadFile(InputStream inputStream, String fileExt){
         if(inputStream == null){
@@ -41,14 +45,14 @@ public class OSSHelper {
                 ossClient.shutdown();
             }
         }
-        return ossConfig.getCdnEndpoint() + filename;
+        return ossConfig.getCdnEndpoint() + "/" + filename;
     }
 
     private String genFilename(String fileExt){
         return UUID.randomUUID().toString().replaceAll("-", "") + fileExt;
     }
 
-    public static OSSHelper getInstance(){
-        return new OSSHelper();
+    public static OSSHelper getInstance(OSSConfig ossConfig){
+        return new OSSHelper(ossConfig);
     }
 }

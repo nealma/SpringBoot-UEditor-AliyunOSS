@@ -1,5 +1,6 @@
 package com.nealma.ext.ueditor.upload;
 
+import com.nealma.ext.ueditor.aliyunoss.OSSConfig;
 import com.nealma.ext.ueditor.aliyunoss.OSSHelper;
 import com.nealma.ext.ueditor.define.AppInfo;
 import com.nealma.ext.ueditor.define.BaseState;
@@ -25,7 +26,7 @@ public class BinaryUploader{
 
     private static final Logger logger = LogManager.getLogger("BinaryUploader");
 
-    public static final State save(HttpServletRequest request, Map<String, Object> conf) {
+    public static final State save(HttpServletRequest request, Map<String, Object> conf, OSSConfig ossConfig) {
         if (!ServletFileUpload.isMultipartContent(request)) {
             return new BaseState(false, AppInfo.NOT_MULTIPART_CONTENT);
         }
@@ -51,7 +52,7 @@ public class BinaryUploader{
                 if(!validSize(file.getSize(), ((Long) conf.get("maxSize")).longValue())){
                     return new BaseState(false, AppInfo.MAX_SIZE);
                 }
-                url = OSSHelper.getInstance().uploadFile(file.getInputStream(), fileExt);
+                url = OSSHelper.getInstance(ossConfig).uploadFile(file.getInputStream(), fileExt);
             }
             State state = new BaseState(Boolean.TRUE);
             state.putInfo("url", url);

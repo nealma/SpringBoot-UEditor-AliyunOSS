@@ -1,4 +1,5 @@
 package com.nealma.ext.ueditor;
+import com.nealma.ext.ueditor.aliyunoss.OSSConfig;
 import com.nealma.ext.ueditor.define.ActionMap;
 import com.nealma.ext.ueditor.define.AppInfo;
 import com.nealma.ext.ueditor.define.BaseState;
@@ -12,22 +13,23 @@ import java.util.Map;
 
 public class ActionEnter {
 	
-	private HttpServletRequest request = null;
-	
-	private String rootPath = null;
-	private String contextPath = null;
-	
-	private String actionType = null;
-	
-	private ConfigManager configManager = null;
+	private HttpServletRequest request;
 
-	public ActionEnter (HttpServletRequest request, String rootPath ) {
+	private OSSConfig ossConfig;
+
+	private String contextPath;
+	
+	private String actionType;
+	
+	private ConfigManager configManager;
+
+	public ActionEnter (HttpServletRequest request, OSSConfig ossConfig) {
 		
 		this.request = request;
-		this.rootPath = rootPath;
+		this.ossConfig = ossConfig;
 		this.actionType = request.getParameter( "action" );
 		this.contextPath = request.getContextPath();
-		this.configManager = ConfigManager.getInstance( this.rootPath, this.contextPath, request.getRequestURI().replace(request.getContextPath(),"") );
+		this.configManager = ConfigManager.getInstance( "/", this.contextPath, request.getRequestURI().replace(request.getContextPath(),"") );
 		
 	}
 	
@@ -75,7 +77,7 @@ public class ActionEnter {
 			case ActionMap.UPLOAD_VIDEO:
 			case ActionMap.UPLOAD_FILE:
 				conf = this.configManager.getConfig( actionCode );
-				state = new Uploader( request, conf ).doExec();
+				state = new Uploader( request, conf, ossConfig ).doExec();
 				break;
 				
 			case ActionMap.CATCH_IMAGE:
